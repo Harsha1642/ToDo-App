@@ -3,15 +3,19 @@ import {View,Text,TouchableOpacity,TextInput,StyleSheet} from 'react-native'
 import CalendarPicker from 'react-native-calendar-picker';
 
 const ToDoForm=({onSubmit,initialValues})=>{
+
     const [title,setTitle]=useState(initialValues.title)
     const [content,setContent]=useState(initialValues.content)
     const [date,setDate]=useState(initialValues.date)
 
     const checkDate=(date,mon,year)=>{
+
         var currentDate = new Date().getDate();
         var currentMonth = new Date().getMonth() + 1;
         var currentYear = new Date().getFullYear();
+
         let month="JanFebMarAprMayJunJulAugSepOctNovDec".indexOf(mon)/3+1
+
         if(year<currentYear){
             return false
         }
@@ -24,44 +28,56 @@ const ToDoForm=({onSubmit,initialValues})=>{
        return true
 
    }
+
    const getDateFromString=(str)=>{
+
        let date=parseInt(str.substring(8,10))
        let mon=str.substring(4,7)
        let year=str.substring(11,15)
        return checkDate(date,mon,year)
    }
+
     return(
         <View >
            <Text style={styles.label}>Enter Title</Text>
            <TextInput
                style={styles.input}
                onChangeText={(text)=>setTitle(text)} 
-               value={title}
-           />
+               value={title}/>
+
            <Text style={styles.label}>Enter ToDo</Text>
+
            <TextInput
                style={styles.input}
                onChangeText={(text)=>setContent(text)} 
-               value={content}
-           
-           />
+               value={content}/>
+
            <Text style={styles.label}>Set Date For Your ToDo..</Text>
+
            <View style={styles.calenderStyle}>
                 <CalendarPicker
                     previousTitleStyle={{fontWeight:"bold"}}
                     nextTitleStyle={{fontWeight:"bold"}}
+                    
                     onDateChange={(newDate)=>{
-                        setDate(getDateFromString(newDate.toString())?newDate.toString().substring(0,16):alert("😒Can't go back now🥺"))}}           
-                />
+                        setDate(getDateFromString(newDate.toString())?newDate.toString().substring(0,16):alert("😒Cannot set past dates🥺"))}}/>
+
                 <View>
+
                 <Text style={styles.dateStyle}>SELECTED DATE : {date}</Text>
+
                 </View>
+
             </View>
+
             <View style={styles.buttonStyle}>
+
                <TouchableOpacity  onPress={()=>onSubmit(title,content,date)} >
                    <Text style={{fontWeight:"bold",color:"pink"}}>SAVE</Text>
                 </TouchableOpacity>
+
             </View>
+
         </View>
     )
 }
@@ -106,4 +122,5 @@ const styles=StyleSheet.create({
         color:"yellow"
     }
 })
+
 export default ToDoForm;

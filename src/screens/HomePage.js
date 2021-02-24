@@ -2,10 +2,13 @@ import React ,{useState} from 'react'
 import {View ,Text,TextInput,StyleSheet,TouchableOpacity} from 'react-native'
 
 const HomePage=(props)=>{
+
     const [username,setUsername]=useState("")
     const [password,setPassword]=useState("")
+
     return(
         <View style={{flex:1,backgroundColor:"aqua",justifyContent:"center",paddingBottom:60}}>
+
             <View style={styles.background}>
                 <TextInput
                     style={{fontSize:18,paddingLeft:10,paddingBottom:0}}
@@ -27,8 +30,9 @@ const HomePage=(props)=>{
                 <TouchableOpacity
                     onPress={()=>{
                         if(username=="" && password==""){
-                            props.navigation.navigate("Home")
-                            //alert("Enter Username & Password")
+                            //props.navigation.navigate("Home")
+                            alert("Enter Username & Password")
+                            
                         }
                         else if(username==""){
                             alert("Username cannot be empty")
@@ -50,8 +54,11 @@ HomePage.navigationOptions=()=>{
     return{
     headerTintColor:"firebrick",
     headerStyle:{
-        backgroundColor:"aqua",
+        backgroundColor:"aqua"
         
+    },headerTitleStyle:{
+        fontWeight:"bold",
+        paddingLeft:120
     }
 }
 }

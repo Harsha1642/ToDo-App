@@ -7,23 +7,25 @@ import ShowScreen from './src/screens/ShowScreen'
 import CreateScreen from './src/screens/CreateScreen'
 import EditScreen from './src/screens/EditScreen'
 import Homepage from './src/screens/HomePage'
+
 const navigator=createStackNavigator({
+
     ToDo:Homepage,
     Home:IndexScreen,
     List:ShowScreen,
     Create:CreateScreen,
     Edit:EditScreen
-
-
     },
     {
-      
       defaultNavigationOptions:{
         headerTintColor:"pink",
         headerStyle:{
             backgroundColor:"black",
+        },
+        headerTitleStyle:{
+          fontWeight:"bold",
+          paddingLeft:70,
         }
-        
             }
     }
 )
