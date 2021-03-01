@@ -10,6 +10,7 @@
     "lint": "eslint ."
   },
   "dependencies": {
+    "@react-native-async-storage/async-storage": "^1.14.1",
     "@react-native-community/masked-view": "^0.1.10",
     "@react-navigation/native": "^5.9.2",
     "@react-navigation/stack": "^5.14.2",
@@ -21,6 +22,7 @@
     "react-native-calendars": "^1.1249.0",
     "react-native-check-box": "^2.1.7",
     "react-native-datepicker": "^1.7.2",
+    "react-native-draggable-flatlist": "^2.5.4",
     "react-native-fade-in-out": "^1.0.5",
     "react-native-gesture-handler": "^1.10.1",
     "react-native-reanimated": "^1.13.2",

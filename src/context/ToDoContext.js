@@ -1,41 +1,35 @@
 import createDataContext from './createDataContext';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const addReducer = (state, action) => {
-
-  const dateSort=(a,b)=>{
-    const mon="JanFebMarAprMayJunJulAugSepOctNovDec"
-    const month1=mon.indexOf(a.date.substring(4,7))/3+1
-    const month2=mon.indexOf(b.date.substring(4,7))/3+1
-    const date1=parseInt(a.date.substring(8,10))
-    const date2=parseInt(b.date.substring(8,10))
-    return month1<month2?-1:month1>month2?1:date1<date2?-1:date1>date2?1:0
-  }
-  
   switch (action.type) {
 
+    case 'initial_state':
+      return action.payload!==null?action.payload:[]
+
     case 'add_todo':
+      state=[...state, {id:Math.floor(Math.random()*999999).toString(),title:action.payload.title,content:action.payload.content,date:action.payload.date,checked:false}];
+      storeItem(state)
+      return state
 
-      state=[...state, {id:Math.floor(Math.random()*99999).toString(),title:action.payload.title,content:action.payload.content,date:action.payload.date,checked:false}];
-
-      state.sort(dateSort)
-      
     case 'delete_todo':
-
-      return state.filter((value)=>value.id!==action.payload)
+      state=state.filter((value)=>value.id!==action.payload)
+      storeItem(state)
+      return state
 
     case 'edit_todo':
-
-      return state.map((item)=>{
+      state= state.map((item)=>{
         if(item.id===action.payload.id){
           return action.payload
         }else{
           return item
         }
-      }).sort(dateSort)
+      })
+      storeItem(state)
+      return state
 
     case 'is_checked':
-        
-      return state.map((item)=>{
+      state= state.map((item)=>{
         if(item.id===action.payload){
           item.checked=!item.checked
           return item
@@ -43,11 +37,32 @@ const addReducer = (state, action) => {
           return item
         }
       })
+      
+      storeItem(state)
+      return state
+
+    
+    case 'is_dragged':
+      state=[...action.payload]
+      storeItem(state)
+      return state
 
     default:
+      storeItem(state)
       return state;
   }
 };
+
+const storeItem=async(arr)=>{await AsyncStorage.setItem("MyList",JSON.stringify(arr))}
+const removeItem=async()=>await AsyncStorage.removeItem("MyList")
+//removeItem()
+
+const initialState=dispatch=>{
+  return async()=>{
+    const data=JSON.parse(await AsyncStorage.getItem("MyList"))
+    dispatch({type:'initial_state',payload:data})
+  }
+}
 
 const addToDo = dispatch => {
   return (title,content,date,callBack) => {
@@ -75,14 +90,15 @@ const onclick=dispatch=>{
   }
 }
 
+const isDragged=dispatch=>{
+  return(state)=>{
+    dispatch({type:'is_dragged',payload:state})
+  }
+}
+
 export const { Context, Provider } = createDataContext(
   addReducer,
-  { addToDo,deleteToDo,editToDo,onclick},
-  [{id:"1",title:"Java",content:"Learn Java Basics",date:"Thu Apr 01 2021",checked:false},
-  {id:"2",title:"Movies",content:"Book movie tickets",date:"Fri Apr 02 2021",checked:false},
-  {id:"3",title:"Anime",content:"Watch anime",date:"Sat Apr 03 2021",checked:false},
-  {id:"5",title:"Python",content:"Learn Python",date:"Mon Apr 05 2021",checked:false},
-  {id:"4",title:"Shopping",content:"Go to shopping",date:"Sun Apr 04 2021",checked:false},
-  
-  ]
-);
+  { addToDo,deleteToDo,editToDo,onclick,isDragged,initialState},
+  []
+)
+

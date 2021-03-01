@@ -1,11 +1,13 @@
-import React ,{useState} from 'react'
+import React ,{useState,useEffect,useContext} from 'react'
 import {View ,Text,TextInput,StyleSheet,TouchableOpacity} from 'react-native'
-
+import { Context } from '../context/ToDoContext';
 const HomePage=(props)=>{
-
+    const {initialState} = useContext(Context)
     const [username,setUsername]=useState("")
     const [password,setPassword]=useState("")
-
+    useEffect(()=>{
+        initialState();
+      },[])
     return(
         <View style={{flex:1,backgroundColor:"aqua",justifyContent:"center",paddingBottom:60}}>
 
@@ -30,8 +32,8 @@ const HomePage=(props)=>{
                 <TouchableOpacity
                     onPress={()=>{
                         if(username=="" && password==""){
-                            //props.navigation.navigate("Home")
-                            alert("Enter Username & Password")
+                            props.navigation.navigate("Home")
+                            //alert("Enter Username & Password")
                             
                         }
                         else if(username==""){

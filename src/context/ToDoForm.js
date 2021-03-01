@@ -1,5 +1,5 @@
-import React,{Fragment, useState} from 'react'
-import {View,Text,TouchableOpacity,TextInput,StyleSheet} from 'react-native'
+import React, {useState} from 'react'
+import {ScrollView,View,Text,TouchableOpacity,TextInput,StyleSheet} from 'react-native'
 import CalendarPicker from 'react-native-calendar-picker';
 
 const ToDoForm=({onSubmit,initialValues})=>{
@@ -7,6 +7,7 @@ const ToDoForm=({onSubmit,initialValues})=>{
     const [title,setTitle]=useState(initialValues.title)
     const [content,setContent]=useState(initialValues.content)
     const [date,setDate]=useState(initialValues.date)
+    const [checklen,setCheckLen]=useState(false)
 
     const checkDate=(date,mon,year)=>{
 
@@ -16,16 +17,10 @@ const ToDoForm=({onSubmit,initialValues})=>{
 
         let month="JanFebMarAprMayJunJulAugSepOctNovDec".indexOf(mon)/3+1
 
-        if(year<currentYear){
+        if(year<currentYear || month<currentMonth || (month==currentMonth && date<currentDate) ){
             return false
         }
-        else if(month<currentMonth){
-            return false
-        }
-        else if(month==currentMonth && date<currentDate){
-            return false
-        }
-       return true
+        return true
 
    }
 
@@ -38,16 +33,18 @@ const ToDoForm=({onSubmit,initialValues})=>{
    }
 
     return(
-        <View >
+        <ScrollView >
            <Text style={styles.label}>Enter Title</Text>
            <TextInput
                style={styles.input}
-               onChangeText={(text)=>setTitle(text)} 
+               onChangeText={(text)=>{setTitle(text),setCheckLen(true?text.length>22:false)}} 
                value={title}/>
-
+            
+            {checklen?<Text style={{fontSize:15,color:"red",paddingLeft:10}}>Title length cannot be more than 22 characters</Text>:null}
            <Text style={styles.label}>Enter ToDo</Text>
 
            <TextInput
+               multiline
                style={styles.input}
                onChangeText={(text)=>setContent(text)} 
                value={content}/>
@@ -58,7 +55,6 @@ const ToDoForm=({onSubmit,initialValues})=>{
                 <CalendarPicker
                     previousTitleStyle={{fontWeight:"bold"}}
                     nextTitleStyle={{fontWeight:"bold"}}
-                    
                     onDateChange={(newDate)=>{
                         setDate(getDateFromString(newDate.toString())?newDate.toString().substring(0,16):alert("😒Cannot set past dates🥺"))}}/>
 
@@ -72,15 +68,17 @@ const ToDoForm=({onSubmit,initialValues})=>{
 
             <View style={styles.buttonStyle}>
 
-               <TouchableOpacity  onPress={()=>onSubmit(title,content,date)} >
+               <TouchableOpacity  onPress={()=>!checklen?onSubmit(title,content,date):null} >
                    <Text style={{fontWeight:"bold",color:"pink"}}>SAVE</Text>
                 </TouchableOpacity>
 
             </View>
 
-        </View>
+        </ScrollView>
     )
 }
+
+
 ToDoForm.defaultProps={
     initialValues:{
         title:"",
